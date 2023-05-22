@@ -1,0 +1,214 @@
+modules:
+- name: nrf
+  path: C:/Users/elija/ncs/v2.3.0/nrf
+  revision: 8f26142b2f815d5a12e1f77ee8a6ea554a89b079
+- name: hostap
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/hostap
+  revision: 73de50a279b35adf345eae35231813d0945991fd
+- name: mcuboot
+  path: C:/Users/elija/ncs/v2.3.0/bootloader/mcuboot
+  revision: 9c58609b3d356d37602bd0a9b403c1ca4e78794e
+- name: mbedtls
+  path: C:/Users/elija/ncs/v2.3.0/modules/crypto/mbedtls
+  revision: c2a20560148691106ebcb45ff8f1e9557e536c56
+- name: trusted-firmware-m
+  path: C:/Users/elija/ncs/v2.3.0/modules/tee/tf-m/trusted-firmware-m
+  revision: 150e7b43dbf624cf4292cb2c0bf172a7edf8e0ea
+- name: cjson
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/cjson
+  revision: c6af068b7f05207b28d68880740e4b9ec1e4b50a
+- name: azure-sdk-for-c
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/azure-sdk-for-c
+  revision: 308c171cb4b5eed266649012a68406487ec81fb2
+- name: memfault-firmware-sdk
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/memfault-firmware-sdk
+  revision: dbe84b934757ce8ed78cf7840ff1b701f5657fe9
+- name: cirrus-logic
+  path: C:/Users/elija/ncs/v2.3.0/modules/hal/cirrus-logic
+  revision: 9f6b3812237fbb0d4157ba3584c13f1644fcbe3a
+- name: openthread
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/openthread
+  revision: 2060039bbfec52ac00f22a7cc3213c2ab1df138e
+- name: canopennode
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/canopennode
+  revision: 53d3415c14d60f8f4bfca54bfbc5d5a667d7e724
+- name: chre
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/chre
+  revision: fe0ab36e0fa7453a4c9b97bedac89709f45cf965
+- name: cmsis
+  path: C:/Users/elija/ncs/v2.3.0/modules/hal/cmsis
+  revision: 74981bf893e8b10931464b9945e2143d99a3f0a3
+- name: fatfs
+  path: C:/Users/elija/ncs/v2.3.0/modules/fs/fatfs
+  revision: 38f303ad09fdd687ee066a938f65ad708dd5989d
+- name: hal_nordic
+  path: C:/Users/elija/ncs/v2.3.0/modules/hal/nordic
+  revision: fe0be3c3546e136a67264084c0e3edfd7354645a
+- name: st
+  path: C:/Users/elija/ncs/v2.3.0/modules/hal/st
+  revision: cccbc24c14decfd3f93959f7b14514536af973c7
+- name: hal_wurthelektronik
+  path: C:/Users/elija/ncs/v2.3.0/modules/hal/wurthelektronik
+  revision: 24ca9873c3d608fad1fea0431836bc8f144c132e
+- name: libmetal
+  path: C:/Users/elija/ncs/v2.3.0/modules/hal/libmetal
+  revision: efa2ace6028290ddee494a78ade772a0b112ab83
+- name: liblc3
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/liblc3
+  revision: 448f3de31f49a838988a162ef1e23a89ddf2d2ed
+- name: littlefs
+  path: C:/Users/elija/ncs/v2.3.0/modules/fs/littlefs
+  revision: ca583fd297ceb48bced3c2548600dc615d67af24
+- name: loramac-node
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/loramac-node
+  revision: ce57712f3e426bbbb13acaec97b45369f716f43a
+- name: lvgl
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/gui/lvgl
+  revision: 5ab83099854719ed326b6ecb9b09b07b1eee4818
+- name: lz4
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/lz4
+  revision: 8e303c264fc21c2116dc612658003a22e933124d
+- name: mipi-sys-t
+  path: C:/Users/elija/ncs/v2.3.0/modules/debug/mipi-sys-t
+  revision: 0d521d8055f3b2b4842f728b0365d3f0ece9c37f
+- name: nanopb
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/nanopb
+  revision: dc4deed54fd4c7e1935e3b6387eedf21bb45dc38
+- name: nrf_hw_models
+  path: C:/Users/elija/ncs/v2.3.0/modules/bsim_hw_models/nrf_hw_models
+  revision: 65bc5305d432c08e24a3f343006d1e7deaff4908
+- name: open-amp
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/open-amp
+  revision: aedcc262f93bbb1b0c2f58026911575729b7465c
+- name: picolibc
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/picolibc
+  revision: 04ada5951cbaf8e7b17f8226ce31cb6837c28ba7
+- name: segger
+  path: C:/Users/elija/ncs/v2.3.0/modules/debug/segger
+  revision: d4e568a920b4bd087886170a5624c167b2d0665e
+- name: tinycbor
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/tinycbor
+  revision: 9e1f34bc08123aaad7666d3652aaa839e8178b3b
+- name: tinycrypt
+  path: C:/Users/elija/ncs/v2.3.0/modules/crypto/tinycrypt
+  revision: 3e9a49d2672ec01435ffbf0d788db6d95ef28de0
+- name: TraceRecorder
+  path: C:/Users/elija/ncs/v2.3.0/modules/debug/TraceRecorder
+  revision: d92607521335eaaaedb01b241cdd26fda48a5ca6
+- name: tf-m-tests
+  path: C:/Users/elija/ncs/v2.3.0/modules/tee/tf-m/tf-m-tests
+  revision: bcb53bccccdc05c713aade707e7a8ddad35c210f
+- name: psa-arch-tests
+  path: C:/Users/elija/ncs/v2.3.0/modules/tee/tf-m/psa-arch-tests
+  revision: f4fc2442b8e29e2a03d9899e46e5a3ea3df8c2c9
+- name: uoscore-uedhoc
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/uoscore-uedhoc
+  revision: e8920192b66db4f909eb9cd3f155d5245c1ae825
+- name: zcbor
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/zcbor
+  revision: 0556edac504d1f34699aa8a22fcd507c14756c9e
+- name: zscilib
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/zscilib
+  revision: ca070ddabdaf67175a2da901d0bd62e8899371c5
+- name: nrfxlib
+  path: C:/Users/elija/ncs/v2.3.0/nrfxlib
+  revision: 6d0f58448fae164cfa4d28c494d6bddf5d0d0224
+- name: connectedhomeip
+  path: C:/Users/elija/ncs/v2.3.0/modules/lib/matter
+  revision: bf8b787ae6f7494ce8cebe4fa2b7eb13ed642b85
+west:
+  manifest: C:\Users\elija\ncs\v2.3.0\nrf\west.yml
+  projects:
+  - path: C:/Users/elija/ncs/v2.3.0/nrf
+    revision: 8f26142b2f815d5a12e1f77ee8a6ea554a89b079
+  - path: C:/Users/elija/ncs/v2.3.0/zephyr
+    revision: fcaa60a99fa9d5256078ed28557856ec3709cfa9
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/hostap
+    revision: 73de50a279b35adf345eae35231813d0945991fd
+  - path: C:/Users/elija/ncs/v2.3.0/bootloader/mcuboot
+    revision: 9c58609b3d356d37602bd0a9b403c1ca4e78794e
+  - path: C:/Users/elija/ncs/v2.3.0/modules/crypto/mbedtls
+    revision: c2a20560148691106ebcb45ff8f1e9557e536c56
+  - path: C:/Users/elija/ncs/v2.3.0/nrfxlib
+    revision: 6d0f58448fae164cfa4d28c494d6bddf5d0d0224
+  - path: C:/Users/elija/ncs/v2.3.0/modules/tee/tf-m/trusted-firmware-m
+    revision: 150e7b43dbf624cf4292cb2c0bf172a7edf8e0ea
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/matter
+    revision: bf8b787ae6f7494ce8cebe4fa2b7eb13ed642b85
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/cjson
+    revision: c6af068b7f05207b28d68880740e4b9ec1e4b50a
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/azure-sdk-for-c
+    revision: 308c171cb4b5eed266649012a68406487ec81fb2
+  - path: C:/Users/elija/ncs/v2.3.0/test/cmock
+    revision: f65066f15d8248e6dcb778efb8739904a4512087
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/memfault-firmware-sdk
+    revision: dbe84b934757ce8ed78cf7840ff1b701f5657fe9
+  - path: C:/Users/elija/ncs/v2.3.0/modules/hal/cirrus-logic
+    revision: 9f6b3812237fbb0d4157ba3584c13f1644fcbe3a
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/openthread
+    revision: 2060039bbfec52ac00f22a7cc3213c2ab1df138e
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/canopennode
+    revision: 53d3415c14d60f8f4bfca54bfbc5d5a667d7e724
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/chre
+    revision: fe0ab36e0fa7453a4c9b97bedac89709f45cf965
+  - path: C:/Users/elija/ncs/v2.3.0/modules/hal/cmsis
+    revision: 74981bf893e8b10931464b9945e2143d99a3f0a3
+  - path: C:/Users/elija/ncs/v2.3.0/tools/edtt
+    revision: 000fb87261beaf33f80a8868e73857bd62edc668
+  - path: C:/Users/elija/ncs/v2.3.0/modules/fs/fatfs
+    revision: 38f303ad09fdd687ee066a938f65ad708dd5989d
+  - path: C:/Users/elija/ncs/v2.3.0/modules/hal/nordic
+    revision: fe0be3c3546e136a67264084c0e3edfd7354645a
+  - path: C:/Users/elija/ncs/v2.3.0/modules/hal/st
+    revision: cccbc24c14decfd3f93959f7b14514536af973c7
+  - path: C:/Users/elija/ncs/v2.3.0/modules/hal/wurthelektronik
+    revision: 24ca9873c3d608fad1fea0431836bc8f144c132e
+  - path: C:/Users/elija/ncs/v2.3.0/modules/hal/libmetal
+    revision: efa2ace6028290ddee494a78ade772a0b112ab83
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/liblc3
+    revision: 448f3de31f49a838988a162ef1e23a89ddf2d2ed
+  - path: C:/Users/elija/ncs/v2.3.0/modules/fs/littlefs
+    revision: ca583fd297ceb48bced3c2548600dc615d67af24
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/loramac-node
+    revision: ce57712f3e426bbbb13acaec97b45369f716f43a
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/gui/lvgl
+    revision: 5ab83099854719ed326b6ecb9b09b07b1eee4818
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/lz4
+    revision: 8e303c264fc21c2116dc612658003a22e933124d
+  - path: C:/Users/elija/ncs/v2.3.0/modules/debug/mipi-sys-t
+    revision: 0d521d8055f3b2b4842f728b0365d3f0ece9c37f
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/nanopb
+    revision: dc4deed54fd4c7e1935e3b6387eedf21bb45dc38
+  - path: C:/Users/elija/ncs/v2.3.0/tools/net-tools
+    revision: e0828aa9629b533644dc96ff6d1295c939bd713c
+  - path: C:/Users/elija/ncs/v2.3.0/modules/bsim_hw_models/nrf_hw_models
+    revision: 65bc5305d432c08e24a3f343006d1e7deaff4908
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/open-amp
+    revision: aedcc262f93bbb1b0c2f58026911575729b7465c
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/picolibc
+    revision: 04ada5951cbaf8e7b17f8226ce31cb6837c28ba7
+  - path: C:/Users/elija/ncs/v2.3.0/modules/debug/segger
+    revision: d4e568a920b4bd087886170a5624c167b2d0665e
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/tinycbor
+    revision: 9e1f34bc08123aaad7666d3652aaa839e8178b3b
+  - path: C:/Users/elija/ncs/v2.3.0/modules/crypto/tinycrypt
+    revision: 3e9a49d2672ec01435ffbf0d788db6d95ef28de0
+  - path: C:/Users/elija/ncs/v2.3.0/modules/debug/TraceRecorder
+    revision: d92607521335eaaaedb01b241cdd26fda48a5ca6
+  - path: C:/Users/elija/ncs/v2.3.0/modules/tee/tf-m/tf-m-tests
+    revision: bcb53bccccdc05c713aade707e7a8ddad35c210f
+  - path: C:/Users/elija/ncs/v2.3.0/modules/tee/tf-m/psa-arch-tests
+    revision: f4fc2442b8e29e2a03d9899e46e5a3ea3df8c2c9
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/uoscore-uedhoc
+    revision: e8920192b66db4f909eb9cd3f155d5245c1ae825
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/zcbor
+    revision: 0556edac504d1f34699aa8a22fcd507c14756c9e
+  - path: C:/Users/elija/ncs/v2.3.0/modules/lib/zscilib
+    revision: ca070ddabdaf67175a2da901d0bd62e8899371c5
+workspace:
+  dirty: false
+  extra: false
+  'off': false
+zephyr:
+  path: C:/Users/elija/ncs/v2.3.0/zephyr
+  revision: fcaa60a99fa9d5256078ed28557856ec3709cfa9

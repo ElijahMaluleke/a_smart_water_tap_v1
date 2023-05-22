@@ -1,0 +1,25 @@
+{
+    "format-version": 0,
+    "time": 1684751366,
+    "files": [
+        {
+            "load_address": 98304,
+            "version_MCUBOOT": "0.0.0+0",
+            "type": "application",
+            "board": "thingy91_nrf9160",
+            "soc": "nRF9160_SICA",
+            "size": 144068,
+            "file": "app_update.bin",
+            "modtime": 1684751365
+        }
+    ],
+    "name": "a_smart_water_tap_v1",
+    "firmware": {
+        "zephyr": {
+            "revision": "fcaa60a99fa9d5256078ed28557856ec3709cfa9"
+        },
+        "nrf": {
+            "revision": "8f26142b2f815d5a12e1f77ee8a6ea554a89b079"
+        }
+    }
+}
