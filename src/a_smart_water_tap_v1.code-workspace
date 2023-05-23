@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "asset_tracker_v2",
+			"path": "../../asset_tracker_v2"
+		}
+	],
+	"settings": {
+		"nrf-connect.toolchain.path": "${nrf-connect.toolchain:2.3.0}",
+		"workbench.colorCustomizations": {},
+		"nrf-connect.applications": [
+			"${workspaceFolder}"
+		]
+	}
+}
