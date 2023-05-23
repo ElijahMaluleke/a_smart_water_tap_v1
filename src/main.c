@@ -25,28 +25,28 @@
 /********************************************************************************
  *
  ********************************************************************************/
-#define OPEN_VALVE 		1
-#define CLOSE_VALVE 	0
+#define OPEN_VALVE 			1
+#define CLOSE_VALVE 		0
 
-#define HIGH 			1
-#define LOW 			0
+#define HIGH 				1
+#define LOW 				0
 
-#define ON 				1
-#define OFF 			0
+#define ON 					1
+#define OFF 				0
 
 #define MOTION_DETECTOR 13 /*  */
 
-#define WATER_VALVE 	16 /*  */
-#define BUZZER 			28	   /* sig pin of the buzzer */
-#define LIGHTWELL_RED 	29
-#define LIGHTWELL_GREEN 30
-#define LIGHTWELL_BLUE 	31
+#define WATER_VALVE 		16 /*  */
+#define BUZZER 				28	   /* sig pin of the buzzer */
+#define LIGHTWELL_RED_LED 	29
+#define LIGHTWELL_GREEN_LED 30
+#define LIGHTWELL_BLUE_LED 	31
 
-#define MAX_OUTPUTS 	5
-#define MAX_INPUTS 		1
+#define MAX_OUTPUTS 		5
+#define MAX_INPUTS 			1
 
 /* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS 	1000
+#define SLEEP_TIME_MS 		1000
 
 /* Option 1: by node label */
 #define MY_GPIO0 DT_NODELABEL(gpio0)
@@ -66,9 +66,9 @@ static struct gpio_callback motion_cb_data;
  ********************************************************************************/
 enum led_id_t
 {
-	LIGHTWELL_RED_LED,
-	LIGHTWELL_GREEN_LED,
-	LIGHTWELL_BLUE_LED
+	LIGHTWELL_RED = 0,
+	LIGHTWELL_GREEN = 1,
+	LIGHTWELL_BLUE = 2
 };
 
 /********************************************************************************
@@ -97,50 +97,82 @@ LOG_MODULE_REGISTER(a_smart_water_tap_v1, LOG_LEVEL_INF);
 void beep_buzzer(int tone, int duration);
 void motion_detected(const struct device *dev, struct gpio_callback *cb, uint32_t pins);
 void my_expiry_function(struct k_timer *timer_id);
-void blink(uint32_t sleep_ms, enum led_id_t id);
-void blink0(void);
-void blink1(void);
-void blink2(void);
-void configuer_all_input(void);
-void configuer_all_output(void);
+void blink_leds(uint32_t sleep_ms, enum led_id_t id, uint32_t numOfBlinks);
+void configuer_all_inputs(void);
+void configuer_all_outputs(void);
 
 /********************************************************************************
  *
  ********************************************************************************/
-void blink(uint32_t sleep_ms, enum led_id_t id)
+void blink_leds(uint32_t sleep_ms, enum led_id_t id, uint32_t numOfBlinks)
 {
-	int ret;
+	int err;
+	uint32_t i = 0;
 
-	switch (id)
+	switch(id)
 	{
-	case LIGHTWELL_RED_LED:
-		ret = gpio_pin_toggle(gpio_dev, LIGHTWELL_RED);
-		if (ret < 0)
-		{
-			return;
+		case LIGHTWELL_RED:
+		{	
+			for(i = 0; i < numOfBlinks; i++) 
+			{	
+				LOG_INF("LIGHTWELL RED LED");
+				dk_set_led_on(DK_LED1);
+				if (err < 0)
+				{
+					return;
+				}
+				k_msleep(sleep_ms);
+				dk_set_led_off(DK_LED1);
+				if (err < 0)
+				{
+					return;
+				}
+				k_msleep(sleep_ms);
+			}
 		}
-		k_msleep(sleep_ms);
+		break;
+		
+		case LIGHTWELL_GREEN:
+		{	
+			for(i = 0; i < numOfBlinks; i++)
+			{	
+				LOG_INF("LIGHTWELL GREEN LED");
+				dk_set_led_on(DK_LED2);
+				if (err < 0)
+				{
+					return;
+				}
+				k_msleep(sleep_ms);
+				dk_set_led_off(DK_LED2);
+				if(err < 0)
+				{
+					return;
+				}
+				k_msleep(sleep_ms);
+			}
+		break;
+		}
+		case LIGHTWELL_BLUE:
+		{
+			for(i = 0; i < numOfBlinks; i++)
+			{
+				LOG_INF("LIGHTWELL BLUE LED");
+				dk_set_led_on(DK_LED3);
+				if (err < 0)
+				{
+					return;
+				}
+				k_msleep(sleep_ms);
+				dk_set_led_off(DK_LED3);
+				if(err < 0)
+				{
+					return;
+				}
+			}
+		}
 		break;
 
-	case LIGHTWELL_GREEN_LED:
-		ret = gpio_pin_toggle(gpio_dev, LIGHTWELL_GREEN);
-		if (ret < 0)
-		{
-			return;
-		}
-		k_msleep(sleep_ms);
-		break;
-
-	case LIGHTWELL_BLUE_LED:
-		ret = gpio_pin_toggle(gpio_dev, LIGHTWELL_BLUE);
-		if (ret < 0)
-		{
-			return;
-		}
-		k_msleep(sleep_ms);
-		break;
-
-	default:
+		default:
 		break;
 	}
 }
@@ -162,31 +194,7 @@ void beep_buzzer(int tone, int duration)
 /********************************************************************************
  *
  ********************************************************************************/
-void blink0(void)
-{
-		blink(100, LIGHTWELL_RED_LED);
-}
-
-/********************************************************************************
- *
- ********************************************************************************/
-void blink1(void)
-{
-	blink(1000, LIGHTWELL_GREEN_LED);
-}
-
-/********************************************************************************
- *
- ********************************************************************************/
-void blink2(void)
-{
-	blink(5000, LIGHTWELL_BLUE_LED);
-}
-
-/********************************************************************************
- *
- ********************************************************************************/
-void configuer_all_output(void)
+void configuer_all_outputs(void)
 {
 	int err;
 	for (uint32_t i = 0; i < MAX_OUTPUTS; i++)
@@ -207,7 +215,7 @@ void configuer_all_output(void)
 /********************************************************************************
  *
  ********************************************************************************/
-void configuer_all_input(void)
+void configuer_all_inputs(void)
 {
 	int err;
 	for (uint32_t i = 0; i < MAX_INPUTS; i++)
@@ -317,12 +325,20 @@ static void button_handler(uint32_t button_state, uint32_t has_changed)
 void main(void)
 {
 	int err;
+
 	uint32_t connect_attempt = 0;
+	
+	configuer_all_outputs();
+	configuer_all_inputs();
+	if (dk_leds_init() != 0)
+	{
+		LOG_ERR("Failed to initialize the LED library");
+	}
 	k_msleep(SLEEP_TIME_MS * 10);
 	LOG_INF("A Smart Water Tap Leakage Controller IoT Project/n/r");
-
-	configuer_all_output();
-	configuer_all_input();
+	blink_leds(150, LIGHTWELL_RED, 5);
+	blink_leds(150, LIGHTWELL_GREEN, 5);
+	blink_leds(150, LIGHTWELL_BLUE, 5);
 
 	/* Configure the interrupt on the button's pin */
 	err = gpio_pin_interrupt_configure(gpio_dev, MOTION_DETECTOR, GPIO_INT_EDGE_TO_ACTIVE);
@@ -340,17 +356,12 @@ void main(void)
 	k_timer_init(&my_timer, my_expiry_function, NULL);
 
 	//
-	while (1)
+	while(1)
 	{
 		LOG_INF("Beep Buzzer!");
 		beep_buzzer(3, 1);
 		k_msleep(SLEEP_TIME_MS);
-	}
-
-	
-	if (dk_leds_init() != 0)
-	{
-		LOG_ERR("Failed to initialize the LED library");
+		blink_leds(250, LIGHTWELL_GREEN, 2);
 	}
 
 	modem_configure();
