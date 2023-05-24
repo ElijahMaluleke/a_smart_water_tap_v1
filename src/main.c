@@ -27,6 +27,8 @@
  ********************************************************************************/
 #define OPEN_VALVE 			1
 #define CLOSE_VALVE 		0
+#define VALVE_OPENED		1
+#define VALVE_CLOSED		0
 
 #define HIGH 				1
 #define LOW 				0
@@ -47,6 +49,9 @@
 
 /* 1000 msec = 1 sec */
 #define SLEEP_TIME_MS 		1000
+#define SLEEP_TIME_S		1000
+#define SLEEP_TIME_HALF_S	500
+#define SLEEP_TIME_QUOTA_S	250
 
 /* Option 1: by node label */
 #define MY_GPIO0 DT_NODELABEL(gpio0)
@@ -74,7 +79,7 @@ enum led_id_t
 /********************************************************************************
  *
  ********************************************************************************/
-static uint8_t buzzer_state = OFF;
+static uint8_t valve_status = VALVE_CLOSED;
 static uint32_t output_gpio[MAX_OUTPUTS] = {WATER_VALVE, BUZZER, LIGHTWELL_RED,
 											LIGHTWELL_GREEN, LIGHTWELL_BLUE};
 static uint32_t input_gpio[MAX_INPUTS] = {MOTION_DETECTOR};
@@ -238,7 +243,7 @@ void configuer_all_inputs(void)
  ********************************************************************************/
 void motion_detected(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
 {
-	buzzer_state = ON;
+	valve_status = VALVE_OPENED;
 	gpio_pin_set(gpio_dev, WATER_VALVE, OPEN_VALVE);
 	/* start periodic timer that expires once every second */
 	k_timer_start(&my_timer, K_SECONDS(10), K_NO_WAIT);
@@ -249,7 +254,7 @@ void motion_detected(const struct device *dev, struct gpio_callback *cb, uint32_
  ********************************************************************************/
 void my_expiry_function(struct k_timer *timer_id)
 {
-	buzzer_state = OFF;
+	valve_status = VALVE_CLOSED;
 	gpio_pin_set(gpio_dev, WATER_VALVE, CLOSE_VALVE);
 }
 
@@ -358,10 +363,17 @@ void main(void)
 	//
 	while(1)
 	{
-		LOG_INF("Beep Buzzer!");
-		beep_buzzer(3, 1);
-		k_msleep(SLEEP_TIME_MS);
-		blink_leds(250, LIGHTWELL_GREEN, 2);
+		if(valve_status == VALVE_CLOSED)
+		{
+			blink_leds(250, LIGHTWELL_GREEN, 2);	
+		}
+		else if (valve_status == VALVE_OPENED)
+		{
+			blink_leds(100, LIGHTWELL_RED, 1);
+			beep_buzzer(1, 1);
+		}
+		else
+		{}
 	}
 
 	modem_configure();
