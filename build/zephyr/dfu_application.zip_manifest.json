@@ -1,6 +1,6 @@
 {
     "format-version": 0,
-    "time": 1684852491,
+    "time": 1685194732,
     "files": [
         {
             "load_address": 98304,
@@ -8,9 +8,9 @@
             "type": "application",
             "board": "thingy91_nrf9160",
             "soc": "nRF9160_SICA",
-            "size": 129984,
+            "size": 130388,
             "file": "app_update.bin",
-            "modtime": 1684852490
+            "modtime": 1685194731
         }
     ],
     "name": "a_smart_water_tap_v1",

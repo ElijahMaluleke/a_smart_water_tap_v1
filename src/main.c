@@ -53,18 +53,10 @@
 #define SLEEP_TIME_HALF_S	500
 #define SLEEP_TIME_QUOTA_S	250
 
+#define APP_EVENT_QUEUE_SIZE 20
+
 /* Option 1: by node label */
 #define MY_GPIO0 DT_NODELABEL(gpio0)
-
-/********************************************************************************
- *
- ********************************************************************************/
-// const struct device *gpio_dev;
-const struct device *gpio_dev = DEVICE_DT_GET(MY_GPIO0);
-//
-struct k_timer my_timer;
-// extern void my_expiry_function(struct k_timer *timer_id);
-static struct gpio_callback motion_cb_data;
 
 /********************************************************************************
  *
@@ -76,6 +68,19 @@ enum led_id_t
 	LIGHTWELL_BLUE = 2
 };
 
+enum app_event_type
+{
+	APP_EVENT_TIMER,
+	APP_EVENT_ERROR,
+	APP_EVENT_SENSOR_DATA,
+};
+
+struct app_event
+{
+	enum app_event_type type;
+	uint32_t value;
+};
+
 /********************************************************************************
  *
  ********************************************************************************/
@@ -83,17 +88,25 @@ static uint8_t valve_status = VALVE_CLOSED;
 static uint32_t output_gpio[MAX_OUTPUTS] = {WATER_VALVE, BUZZER, LIGHTWELL_RED,
 											LIGHTWELL_GREEN, LIGHTWELL_BLUE};
 static uint32_t input_gpio[MAX_INPUTS] = {MOTION_DETECTOR};
-
-/********************************************************************************
- *
- ********************************************************************************/
 /* The mqtt client struct */
 static struct mqtt_client client;
 /* File descriptor */
 static struct pollfd fds;
-
+//
 static K_SEM_DEFINE(lte_connected, 0, 1);
+// const struct device *gpio_dev;
+const struct device *gpio_dev = DEVICE_DT_GET(MY_GPIO0);
+//
+struct k_timer my_timer;
+struct k_timer main_timer;
+// extern void my_expiry_function(struct k_timer *timer_id);
+static struct gpio_callback motion_cb_data;
+//
+struct k_msgq app_msgq;
 
+/************************************************************************
+ *
+ ************************************************************************/
 LOG_MODULE_REGISTER(a_smart_water_tap_v1, LOG_LEVEL_INF);
 
 /********************************************************************************
@@ -102,16 +115,15 @@ LOG_MODULE_REGISTER(a_smart_water_tap_v1, LOG_LEVEL_INF);
 void beep_buzzer(int tone, int duration);
 void motion_detected(const struct device *dev, struct gpio_callback *cb, uint32_t pins);
 void my_expiry_function(struct k_timer *timer_id);
-void blink_leds(uint32_t sleep_ms, enum led_id_t id, uint32_t numOfBlinks);
+void blink_leds(uint32_t on_sleep_ms, uint32_t off_sleep_ms,enum led_id_t id, uint32_t numOfBlinks);
 void configuer_all_inputs(void);
 void configuer_all_outputs(void);
 
 /********************************************************************************
  *
  ********************************************************************************/
-void blink_leds(uint32_t sleep_ms, enum led_id_t id, uint32_t numOfBlinks)
+void blink_leds(uint32_t on_sleep_ms, uint32_t off_sleep_ms,enum led_id_t id, uint32_t numOfBlinks)
 {
-	int err;
 	uint32_t i = 0;
 
 	switch(id)
@@ -120,19 +132,10 @@ void blink_leds(uint32_t sleep_ms, enum led_id_t id, uint32_t numOfBlinks)
 		{	
 			for(i = 0; i < numOfBlinks; i++) 
 			{	
-				LOG_INF("LIGHTWELL RED LED");
 				dk_set_led_on(DK_LED1);
-				if (err < 0)
-				{
-					return;
-				}
-				k_msleep(sleep_ms);
+				k_msleep(on_sleep_ms);
 				dk_set_led_off(DK_LED1);
-				if (err < 0)
-				{
-					return;
-				}
-				k_msleep(sleep_ms);
+				k_msleep(off_sleep_ms);
 			}
 		}
 		break;
@@ -140,20 +143,11 @@ void blink_leds(uint32_t sleep_ms, enum led_id_t id, uint32_t numOfBlinks)
 		case LIGHTWELL_GREEN:
 		{	
 			for(i = 0; i < numOfBlinks; i++)
-			{	
-				LOG_INF("LIGHTWELL GREEN LED");
+			{
 				dk_set_led_on(DK_LED2);
-				if (err < 0)
-				{
-					return;
-				}
-				k_msleep(sleep_ms);
+				k_msleep(on_sleep_ms);
 				dk_set_led_off(DK_LED2);
-				if(err < 0)
-				{
-					return;
-				}
-				k_msleep(sleep_ms);
+				k_msleep(off_sleep_ms);
 			}
 		break;
 		}
@@ -161,18 +155,10 @@ void blink_leds(uint32_t sleep_ms, enum led_id_t id, uint32_t numOfBlinks)
 		{
 			for(i = 0; i < numOfBlinks; i++)
 			{
-				LOG_INF("LIGHTWELL BLUE LED");
 				dk_set_led_on(DK_LED3);
-				if (err < 0)
-				{
-					return;
-				}
-				k_msleep(sleep_ms);
+				k_msleep(on_sleep_ms);
 				dk_set_led_off(DK_LED3);
-				if(err < 0)
-				{
-					return;
-				}
+				k_msleep(off_sleep_ms);
 			}
 		}
 		break;
@@ -258,6 +244,20 @@ void my_expiry_function(struct k_timer *timer_id)
 	gpio_pin_set(gpio_dev, WATER_VALVE, CLOSE_VALVE);
 }
 
+/************************************************************************
+ *
+ ************************************************************************/
+void expiry_timer_fn(struct k_timer *dummy)
+{
+	LOG_INF("expiry timer");
+	struct app_event evt = {
+		.type = APP_EVENT_TIMER,
+		.value = 1234,
+	};
+	//
+	k_msgq_put(&app_msgq, &evt, K_NO_WAIT);
+}
+
 /********************************************************************************
  *
  ********************************************************************************/
@@ -324,15 +324,22 @@ static void button_handler(uint32_t button_state, uint32_t has_changed)
 	}
 }
 
+/************************************************************************
+ *
+ ************************************************************************/
+K_MSGQ_DEFINE(app_msgq, sizeof(struct app_event), APP_EVENT_QUEUE_SIZE, 4);
+
 /********************************************************************************
  *
  ********************************************************************************/
 void main(void)
 {
 	int err;
+	uint32_t i;
 
 	uint32_t connect_attempt = 0;
-	
+	struct app_event evt;
+
 	configuer_all_outputs();
 	configuer_all_inputs();
 	if (dk_leds_init() != 0)
@@ -341,10 +348,15 @@ void main(void)
 	}
 	k_msleep(SLEEP_TIME_MS * 10);
 	LOG_INF("A Smart Water Tap Leakage Controller IoT Project/n/r");
-	blink_leds(150, LIGHTWELL_RED, 5);
-	blink_leds(150, LIGHTWELL_GREEN, 5);
-	blink_leds(150, LIGHTWELL_BLUE, 5);
-
+	
+	//
+	for(i = 0; i < 5; i++)
+	{
+		blink_leds(SLEEP_TIME_QUOTA_S/2, SLEEP_TIME_QUOTA_S, LIGHTWELL_RED, 1);
+		blink_leds(SLEEP_TIME_QUOTA_S/2, SLEEP_TIME_QUOTA_S, LIGHTWELL_GREEN, 1);
+		blink_leds(SLEEP_TIME_QUOTA_S/2, SLEEP_TIME_QUOTA_S, LIGHTWELL_BLUE, 1);
+	}
+	
 	/* Configure the interrupt on the button's pin */
 	err = gpio_pin_interrupt_configure(gpio_dev, MOTION_DETECTOR, GPIO_INT_EDGE_TO_ACTIVE);
 	if (err < 0)
@@ -359,23 +371,55 @@ void main(void)
 
 	//
 	k_timer_init(&my_timer, my_expiry_function, NULL);
-
+	k_timer_init(&main_timer, expiry_timer_fn, NULL);
 	//
-	while(1)
+
+	LOG_INF("App Event Application started!");
+	k_timer_start(&main_timer, K_SECONDS(1), K_NO_WAIT);
+
+	while (true)
 	{
-		if(valve_status == VALVE_CLOSED)
+		switch (evt.type)
 		{
-			blink_leds(250, LIGHTWELL_GREEN, 2);	
+			k_msgq_get(&app_msgq, &evt, K_NO_WAIT);
+
+			LOG_INF("Timer event type: %i", evt.type);
+			case APP_EVENT_TIMER:
+			{
+				LOG_INF("Timer event value: %i", evt.value);
+			}
+			break;
+
+			case APP_EVENT_ERROR:
+			{
+			}
+			break;
+
+			case APP_EVENT_SENSOR_DATA:
+			{
+			}
+			break;
+
+			default:
+				LOG_INF("Timer event type: default");
+			break;
+		}
+
+		if (valve_status == VALVE_CLOSED)
+		{
+			blink_leds(SLEEP_TIME_HALF_S, SLEEP_TIME_S, LIGHTWELL_GREEN, 1);
 		}
 		else if (valve_status == VALVE_OPENED)
 		{
-			blink_leds(100, LIGHTWELL_RED, 1);
+			blink_leds(SLEEP_TIME_QUOTA_S, SLEEP_TIME_HALF_S, LIGHTWELL_RED, 1);
 			beep_buzzer(1, 1);
 		}
 		else
-		{}
+		{
+		}
 	}
 
+	//
 	modem_configure();
 
 	if (dk_buttons_init(button_handler) != 0)
